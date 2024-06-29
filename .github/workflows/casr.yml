@@ -26,9 +26,6 @@ jobs:
 
     - name: Build project with JDK 17 
       run: mvn clean install -DskipTests
-
-    - name: Install timeout command (to make hanging threads stop)
-      run: brew install coreutils
       
     - name: Install Rust
       run: |

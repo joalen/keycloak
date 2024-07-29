@@ -34,6 +34,23 @@ jobs:
         
     - name: Install CASR using Cargo
       run: cargo install casr
+
+    - name: Run CASR on the .JAR file(s) (macOS)
+      if: runner.os == 'macOS'
+      continue-on-error: true
+      run: |  
+        mkdir -p casr_reports
+        set +e
+        #!/bin/bash
+        directory=$(pwd)
+        
+        jar_files=$(find "$directory" -type f -name "*.jar")
+        for jar_file in $jar_files; 
+        do
+            sanitized_main_class=$(sanitize_filename "$main_class")
+            command="gtimeout 2m java -jar $runjpf_jar +classpath=$jar_file $main_class" 
+            $command > "./casr_reports/${sanitized_main_class}_casr_report.txt"
+        done
         
     - name: Run CASR on the .JAR file(s) (Linux)
       if: runner.os == 'Linux'
